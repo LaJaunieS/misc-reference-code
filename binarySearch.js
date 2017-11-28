@@ -33,7 +33,7 @@ const binarySearch = (list,lookFor)=> {
 	}
 
 
-	if (lookFor !== midpoint){
+	if (lookFor !== list[midpoint]){
 		return -1;
 	};
 
