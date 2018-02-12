@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8">
+		<title>String comparison</title>
+        <style>
+           
+            .diff {
+                color: red;
+            }
+            
+            .add {
+                color: green;
+            }
+        </style>
+	</head>
+	<body>
+        
+        <form id="stringCompare">
+            <div>
+                <label for="firstString">First String</label>
+                <textarea id="firstString" placeholder="Every good boy"></textarea>
+            </div>
+            
+            <div>
+                <label for="secondString">Second String</label>
+                <textarea id="secondString" placeholder="Every good boy does fine"></textarea>
+            </div>
+            
+            <button id="compareBtn">Compare</button>
+            <button id="clear">Clear</button>
+        
+        </form>
+        
+        <div id="comparedText">
+            <p>...</p>
+            <p>...</p>
+        </div>
+        
+		<script>
+        //function will take two strings inputted  by user
+        //will determine differences between the two strings
+        //will print differences, showing deletions from string one in red, and additions from string one in green
+!function() {
+    var comparedText = document.getElementById('comparedText');
+    var compareBtn = document.getElementById('compareBtn');
+    var clearBtn = document.getElementById('clear'); 
+    var firstStrPrint = document.getElementById('firstString');
+    var secondStrPrint = document.getElementById('secondString');
+
+    compareBtn.addEventListener('click', compareStrings);
+    clearBtn.addEventListener('click', clearInputs);
+
+            
+    function clearInputs(event) {
+        event.preventDefault();
+        firstStrPrint.value = "";
+        secondStrPrint.value = "";
+    }
+
+    //split both strings into arrays
+        //loop over array1, test if each index of array1 includes() in corresponding index of array2- 
+        //if true, the arrays at that index match and concat into return string- if false, put those in a separate array for printing on screen to concat that onto return string
+    function compareStrings(event){
+        var string1Arr= (firstStrPrint.value || firstStrPrint.placeholder).split(' '); 
+        var string2Arr = (secondStrPrint.value || secondStrPrint.placeholder).split(' ');
+        var string1Compare= [];
+        var string2Compare = [];
+        var diffs = [];
+        var finalStr1= "";
+        var i;
+        firstStrPrint.innerHTML = "";
+        secondStrPrint.innerHTML = "";
+           
+        function checkArrays(longerArray, shorterArray, longerComparisonArray, cls) {
+           for (i = 0; i < longerArray.length; i++) {
+                if(string1Arr[i] === string2Arr[i]) {
+                    //console.log("iteration" + i + ": " + 'condition 1 triggered- string indices match');
+                    string1Compare.push(string1Arr[i]);
+                    string2Compare.push(string2Arr[i]);
+                } else {
+                    if (shorterArray[i] !== undefined) {
+                        //console.log("iteration" + i + ": " + 'condition 2 triggered- string indices do not match');
+                        string1Compare.push("<span class='diff'>" + string1Arr[i] + "</span>");
+                        string2Compare.push("<span class='add'>" + string2Arr[i] + "</span>");
+                    } else {
+                        //console.log("iteration" + i + ": " + 'condition 2 triggered- string indices do not match');
+                        longerComparisonArray.push( "<span class='" + cls + "'>" + longerArray[i] + "</span>" );
+                    };
+                };
+            };    
+        }
+
+        event.preventDefault();
+        if (string1Arr.length > string2Arr.length) {
+            checkArrays(string1Arr, string2Arr, string1Compare, 'diff');
+        } else {   //string2Arr.length > string1Arr.length
+            checkArrays(string2Arr, string1Arr, string2Compare, 'add');
+        };
+                 
+        comparedText.firstElementChild.innerHTML = string1Compare.join(' ');
+        comparedText.lastElementChild.innerHTML  = string2Compare.join(' ');
+    }   
+    
+}();
+
+        
+        </script>
+	</body>
+</html>
